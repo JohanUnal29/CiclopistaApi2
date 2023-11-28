@@ -1,0 +1,10 @@
+const EErros = {
+    ROUTING_ERROR: 1,
+    INVALID_TYPES_ERROR: 2,
+    DATABASES_READ_ERROR: 3,
+    DATABASES_CONNECTION_ERORR: 4,
+    ADDPRODUCT_TO_CART_ERORR: 5,
+    DATABASES_LIMIT: 6,
+};
+
+export default EErros;

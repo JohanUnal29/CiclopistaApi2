@@ -1,0 +1,179 @@
+paths:
+  /api/purchase:
+    get:
+      summary: Obtiene todos los tickets
+      tags:
+        - Obtiene todos los tickets
+      responses:
+        "200":
+          description: Los tickets fueron devueltos satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Tickets"
+        "500":
+          description: Error del servidor. Usualmente generando la query o falla la conexion a la DB
+
+  /api/purchase/id/{pid}:
+    get:
+      summary: Obtiene un ticket
+      tags:
+        - Obtiene un ticket
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del ticket que se busca
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: Ticket encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Tickets"
+
+  /api/purchase/{pid}:
+    delete:
+      summary: Eliminar un ticket por su ID
+      tags:
+        - Eliminar un ticket por su ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del ticket que se desea eliminar
+          schema:
+            type: string # Puedes ajustar el tipo según tu implementación
+      responses:
+        "204":
+          description: Ticket eliminado exitosamente
+        "404":
+          description: Ticket no encontrado
+        "500":
+          description: Error del servidor. Usualmente generando la query o falla la conexión a la DB
+
+  
+  /api/purchase/status/{status}:
+    get:
+      summary: Obtiene todos los tickets dependiendo del status (pendientes, en progreso, finalizados)
+      tags:
+        - Obtener tickets por su status
+      parameters:
+        - name: status
+          in: path
+          required: true
+          description: Status del ticket que se busca
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: Ticket encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Tickets"
+    
+  /api/purchase/addticket:
+    post:
+      summary: Agregar un ticket
+      tags:
+        - Agregar un ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Ticket"
+      responses:
+        "200":
+          description: Ticket agregado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+components:
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código del ticket
+        purchase_datetime:
+          type: string
+          description: Fecha y hora de la compra
+        name:
+          type: string
+          description: Nombre del titular del ticket
+        purchaser:
+          type: string
+          description: Nombre del comprador
+        phone:
+          type: string
+          description: Número de teléfono del comprador
+        message:
+          type: string
+          description: Mensaje relacionado con el ticket
+        status:
+          type: string
+          description: Estado del ticket (por defecto, "pendiente")
+        cart:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: ID del producto en el carrito
+              title:
+                type: string
+                description: Título del producto
+              code:
+                type: string
+                description: Código del producto
+              thumbnails:
+                type: string
+                default: ""
+                description: Imagen del producto
+              quantity:
+                type: number
+                description: Cantidad del producto en el carrito
+              price:
+                type: number
+                description: Precio unitario del producto
+        amount:
+          type: number
+          description: Monto total de la compra
+      example:
+        code: "T12345"
+        purchase_datetime: "2023-09-07T12:00:00Z"
+        name: "Juan Pérez"
+        purchaser: "Usuario123"
+        phone: "+1234567890"
+        message: "Este es un mensaje relacionado con el ticket"
+        status: "pendiente"
+        cart:
+          - _id: "64c057b3e7a3e8b360736055"
+            title: "Sillín"
+            code: "P123"
+            thumbnails: "1G72rw1DxOyowUR33TFhdWl8PYv92gbw3"
+            quantity: 2
+            price: 35000
+        amount: 70000
+
+    Success:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la operación (éxito o error)
+        message:
+          type: string
+          description: Descripción de lo que ocurrió
+      example:
+        status: success
+        message: Ticket agregado exitosamente
