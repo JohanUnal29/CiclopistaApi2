@@ -2,7 +2,6 @@ import CustomError from "./errors/custom-error.js";
 import EErros from "./errors/enum.js";
 
 import firebaseApp from "../../firebase/credentials.js";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const firestore = getFirestore(firebaseApp);
