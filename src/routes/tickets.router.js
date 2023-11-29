@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { ticketController } from "../controllers/tickets.controller.js";
 import { ticketValidator } from "../middlewares/tickets.js";
-import checkAdmin from "../middlewares/auth.js";
+import {checkAdmin} from "../middlewares/auth.js";
 
 
 

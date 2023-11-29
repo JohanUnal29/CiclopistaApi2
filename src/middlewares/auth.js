@@ -7,7 +7,7 @@ import { usersFirebaseService } from "../DAO/mongo/services/usersFirebase.servic
 //     return res.status(401).render('error-page', { msg: 'please log in' });
 //   }
 
-const checkAdmin = async (req, res, next) => {
+  export async function checkAdmin(req, res, next){
   // Verifica si el usuario es administrador
   const uid = req.params.uid;
 
@@ -24,7 +24,6 @@ const checkAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = checkAdmin;
 
 // export function checkAdmin(req, res, next) {
 //   if (req.session.user.email && req.session.user.rol === "admin") {

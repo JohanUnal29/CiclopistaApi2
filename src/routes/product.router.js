@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { productController } from "../controllers/products.controller.js";
 import { productValidator } from "../middlewares/product.js";
-import checkAdmin from "../middlewares/auth.js";
+import {checkAdmin} from "../middlewares/auth.js";
 
 const router = Router();
 
