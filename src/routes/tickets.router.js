@@ -14,18 +14,18 @@ import { checkAdmin } from "../middlewares/auth.js";
 const router = Router();
 
 //productos paginados
-router.get("/", checkAdmin, ticketController.getTickets);
+router.get("/:uid", checkAdmin, ticketController.getTickets);
 
-router.get("/id/:pid", checkAdmin, ticketController.getTicketById);
+router.get("/id/:pid/:uid", checkAdmin, ticketController.getTicketById);
 
-router.get("/status/:status", checkAdmin, ticketController.getTicketsByStatus);
+router.get("/status/:status/:uid", checkAdmin, ticketController.getTicketsByStatus);
 
 router.get("/ticketsuser/:email", ticketController.getTicketsByUser);
 
 router.post("/addticket", ticketValidator, ticketController.addTicket);
 
-router.put("/:pid", checkAdmin, ticketController.updateTicket);
+router.put("/:pid/:iud", checkAdmin, ticketController.updateTicket);
 
-router.delete("/:pid", checkAdmin, ticketController.deleteTicket);
+router.delete("/:pid/:iud", checkAdmin, ticketController.deleteTicket);
 
 export default router;
