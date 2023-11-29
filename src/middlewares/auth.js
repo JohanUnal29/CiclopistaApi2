@@ -24,7 +24,7 @@ const checkAdmin = async (req, res, next) => {
   }
 };
 
-export { checkAdmin };
+module.exports = checkAdmin;
 
 // export function checkAdmin(req, res, next) {
 //   if (req.session.user.email && req.session.user.rol === "admin") {
