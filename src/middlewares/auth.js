@@ -1,4 +1,4 @@
-import { usersFirebaseService } from "../DAO/mongo/services/usersFirebase.service";
+import { usersFirebaseService } from "../DAO/mongo/services/usersFirebase.service.js";
 
 // export function checkUser(req, res, next) {
 //     if (req.session.user.email) {
