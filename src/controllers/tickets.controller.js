@@ -171,7 +171,7 @@ class TicketController {
       const ticketDTO = new TicketDTO(ticketCode, ticket, updatedCart);
       await ticketService.addTicket(ticketDTO);
   
-      return res.send({ status: "OK", message: "Ticket successfully added" });
+      return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode });
     } catch (error) {
       return res.status(400).send({
         status: "error",
