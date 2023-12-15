@@ -5,6 +5,7 @@ import ticketsModel from "../DAO/mongo/models/tickets.model.js";
 import TicketDTO from "../DAO/DTO/tickets.dto.js";
 import CustomError from "../DAO/mongo/services/errors/custom-error.js";
 import EErros from "../DAO/mongo/services/errors/enum.js";
+import crypto from "crypto";
 // import mercadopago from "mercadopago";
 
 import { entorno } from "../config.js";
