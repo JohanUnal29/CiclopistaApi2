@@ -177,10 +177,10 @@ class TicketController {
 
 
       try {
-        var cadenaConcatenada = ticketCode + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
+        var cadenaConcatenada = ticketDTO.code + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
         //Ejemplo
         const encondedText = new TextEncoder().encode(cadenaConcatenada);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', encondedText);
+        const hashBuffer = await crypto.subtle.digest('SHA-256',encondedText);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // "37c8407747e595535433ef8f6a811d853cd943046624a0ec04662b17bbf33bf5"
         return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex });
