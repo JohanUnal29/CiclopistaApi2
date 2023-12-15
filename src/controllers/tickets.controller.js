@@ -7,7 +7,7 @@ import CustomError from "../DAO/mongo/services/errors/custom-error.js";
 import EErros from "../DAO/mongo/services/errors/enum.js";
 // import mercadopago from "mercadopago";
 
-// import { entorno } from "../config.js";
+import { entorno } from "../config.js";
 
 // mercadopago.configure({
 //   access_token: entorno.MERCADOPAGO_KEY,
@@ -139,6 +139,9 @@ class TicketController {
 
   async addTicket(req, res) {
     try {
+      const cop = "COP";
+      const SecretoSeguridad = entorno.SecretoSeguridad
+      
       const ticket = req.body;
 
       let ticketCode = uuidv4().toString();
@@ -170,8 +173,15 @@ class TicketController {
 
       const ticketDTO = new TicketDTO(ticketCode, ticket, updatedCart);
       await ticketService.addTicket(ticketDTO);
+
+      var cadenaConcatenada = ticketCode+(ticketDTO.amount*100)+cop+SecretoSeguridad;
+      //Ejemplo
+      const encondedText = new TextEncoder().encode(cadenaConcatenada);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', encondedText);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // "37c8407747e595535433ef8f6a811d853cd943046624a0ec04662b17bbf33bf5"
   
-      return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode });
+      return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex });
     } catch (error) {
       return res.status(400).send({
         status: "error",
