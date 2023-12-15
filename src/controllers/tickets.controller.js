@@ -141,7 +141,7 @@ class TicketController {
     try {
       const cop = "COP";
       const SecretoSeguridad = entorno.SecretoSeguridad
-      
+
       const ticket = req.body;
 
       let ticketCode = uuidv4().toString();
@@ -174,13 +174,24 @@ class TicketController {
       const ticketDTO = new TicketDTO(ticketCode, ticket, updatedCart);
       await ticketService.addTicket(ticketDTO);
 
-      var cadenaConcatenada = ticketCode+(ticketDTO.amount*100)+cop+SecretoSeguridad;
-      //Ejemplo
-      const encondedText = new TextEncoder().encode(cadenaConcatenada);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', encondedText);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // "37c8407747e595535433ef8f6a811d853cd943046624a0ec04662b17bbf33bf5"
-  
+
+      try {
+        var cadenaConcatenada = ticketCode + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
+        //Ejemplo
+        const encondedText = new TextEncoder().encode(cadenaConcatenada);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', encondedText);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // "37c8407747e595535433ef8f6a811d853cd943046624a0ec04662b17bbf33bf5"
+      } catch (hashError) {
+        console.error("Error generating hash:", hashError);
+        return res.status(500).send({
+          status: "error",
+          error: "Internal Server Error",
+          cause: "Error generating hash.",
+        });
+      }
+
+
       return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex });
     } catch (error) {
       return res.status(400).send({
