@@ -179,10 +179,18 @@ class TicketController {
       try {
         var cadenaConcatenada = ticketDTO.code + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
         //Ejemplo
+        console.log("cadena: "+cadenaConcatenada);
+        console.log("crypto:", crypto);
+        console.log("crypto.subtle: ", crypto.subtle);
         const encondedText = new TextEncoder().encode(cadenaConcatenada);
+        console.log("encondedText: "+encondedText)
         const hashBuffer = await crypto.subtle.digest('SHA-256',encondedText);
+        console.log("hashBuffer: "+hashBuffer)
         const hashArray = Array.from(new Uint8Array(hashBuffer));
+        console.log("hashArray: "+hashArray)
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // "37c8407747e595535433ef8f6a811d853cd943046624a0ec04662b17bbf33bf5"
+        console.log("hashHex: "+hashHex)
+
         return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex });
       } catch (hashError) {
         console.error("Error generating hash:", hashError);
