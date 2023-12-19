@@ -183,7 +183,7 @@ class TicketController {
         const hashHex = crypto.createHash('sha256').update(cadenaConcatenada).digest('hex');
         console.log("HASH: "+hashHex);
 
-        return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex });
+        return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex, amount: (ticketDTO.amount * 100)});
       } catch (hashError) {
         console.error("Error generating hash:", hashError);
         return res.status(500).send({
