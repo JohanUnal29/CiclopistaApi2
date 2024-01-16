@@ -54,7 +54,7 @@ const ordersSchema = mongoose.Schema({
   },
   statusPay: {
     type: String,
-    default: "pendiente",
+    default: "PENDING",
   },
   cart: [
     {
