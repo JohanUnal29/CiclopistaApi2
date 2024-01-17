@@ -206,10 +206,10 @@ class TicketController {
 
   async updateTicket(req, res) {
     try {
-      const ticketId = req.params.pid;
+      const ticketCode = req.params.referencia;
       const changes = req.body;
 
-      const updatedTicket = await ticketService.updateTicket(ticketId, changes);
+      const updatedTicket = await ticketService.updateTicket(ticketCode, changes);
 
       if (!updatedTicket) {
         CustomError.createError({

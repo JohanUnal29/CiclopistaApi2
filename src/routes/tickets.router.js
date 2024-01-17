@@ -24,8 +24,8 @@ router.get("/ticketsuser/:email", ticketController.getTicketsByUser);
 
 router.post("/addticket", ticketValidator, ticketController.addTicket);
 
-router.put("/:pid/", ticketController.updateTicket);
+router.put("/:referencia", ticketController.updateTicket);
 
-router.delete("/:pid/:iud", checkAdmin, ticketController.deleteTicket);
+router.delete("/:pid/:uid", checkAdmin, ticketController.deleteTicket);
 
 export default router;

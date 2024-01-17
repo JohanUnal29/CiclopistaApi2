@@ -83,9 +83,9 @@ class TicketService {
     }
   };
 
-  updateTicket = async (id, changes) => {
+  updateTicket = async (ticketCode, changes) => {
     try {
-      const updatedTicket = await ticketsModel.updateOne({ _id: id }, changes);
+      const updatedTicket = await ticketsModel.updateOne({ code: ticketCode }, changes);
       return updatedTicket;
     } catch (error) {
       CustomError.createError({
