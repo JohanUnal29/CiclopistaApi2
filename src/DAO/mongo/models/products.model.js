@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-
+//
 const productsCollection = "products";
 
 const productsSchema = mongoose.Schema({
@@ -36,9 +36,9 @@ const productsSchema = mongoose.Schema({
     type: String,
     default: "Repuestos",
   },
-  thumbnails: {
+  image: {
     type: String,
-    default: '',
+    required: true,
   },
 });
 
