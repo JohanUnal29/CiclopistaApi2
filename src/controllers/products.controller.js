@@ -175,7 +175,7 @@ class ProductController {
 
   async addProduct(req, res) {
     const product = req.body;
-
+    console.log("el hijueputa producto: ",product)
     const productDTO = new ProductDTO(product);
 
     try {
