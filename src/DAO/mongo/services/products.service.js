@@ -61,12 +61,7 @@ class ProductService {
       const createdProduct = await productsModel.create(product);
       return createdProduct;
     } catch (error) {
-      CustomError.createError({
-        name: "Error-add-products-IN-SERVICE",
-        cause: "Error, failed to add the product",
-        message: "Error, failed to add the product",
-        code: EErros.DATABASES_READ_ERROR,
-      });
+      console.log(error)
     }
   };
 
