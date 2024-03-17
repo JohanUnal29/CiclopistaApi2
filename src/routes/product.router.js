@@ -2,16 +2,16 @@ import { Router } from "express";
 import { productController } from "../controllers/products.controller.js";
 import { productValidator } from "../middlewares/product.js";
 import { checkAdmin } from "../middlewares/auth.js";
+import { __dirname } from "../config.js";
 import multer from "multer"
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "../IMG/products");
+    destination:function(req,file,cb){
+        cb(null,`${__dirname}/../IMG/products`)
     },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now();
-        cb(null, uniqueSuffix + file.originalname);
-    },
+    filename:function(req,file,cb){
+        cb(null,`${Date.now()}-${file.originalname}`)
+    }
 });
 
 const upload = multer({ storage: storage });
