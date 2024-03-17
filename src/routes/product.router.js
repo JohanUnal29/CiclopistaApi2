@@ -23,7 +23,14 @@ router.get("/all", productController.getProducts);
 router.get("/:category", productController.getProductsByCategory);
 router.get("/id/:pid", productController.getProductById);
 //, productController.addProduct
-router.post("/addproduct/:uid", upload.single("image"));//quitar el check admin para test
+router.post("/addproduct/:uid", upload.single("image"), (req, res) => {
+    const imageName = req.file.filename
+  
+    // Save this data to a database probably
+  
+    console.log(imageName)
+    res.send({imageName})
+})//quitar el check admin para test
 router.put("/:pid/:uid", checkAdmin, productController.updateProduct);
 router.delete("/:pid/:uid", checkAdmin, productController.deleteProduct);
 
