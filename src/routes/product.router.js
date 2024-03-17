@@ -22,7 +22,8 @@ router.get("/", productController.getPaginatedProducts);
 router.get("/all", productController.getProducts);
 router.get("/:category", productController.getProductsByCategory);
 router.get("/id/:pid", productController.getProductById);
-router.post("/addproduct/:uid", checkAdmin, upload.single("image"), productController.addProduct);//quitar el check admin para test
+//, productController.addProduct
+router.post("/addproduct/:uid", checkAdmin, upload.single("image"));//quitar el check admin para test
 router.put("/:pid/:uid", checkAdmin, productController.updateProduct);
 router.delete("/:pid/:uid", checkAdmin, productController.deleteProduct);
 
