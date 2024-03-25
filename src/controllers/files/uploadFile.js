@@ -1,5 +1,5 @@
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import firebaseApp from "../../DAO/firebase/credentials";
+import firebaseApp from "../../DAO/firebase/credentials.js";
 import { getStorage } from "firebase/storage";
 import sharp from 'sharp';
 
