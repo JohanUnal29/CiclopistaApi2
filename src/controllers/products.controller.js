@@ -2,6 +2,7 @@ import { productService } from "../DAO/mongo/services/products.service.js";
 import ProductDTO from "../DAO/DTO/products.dto.js";
 import CustomError from "../DAO/mongo/services/errors/custom-error.js";
 import EErros from "../DAO/mongo/services/errors/enum.js";
+import { uploadFile } from "./files/uploadFile.js";
 
 class ProductController {
   async getPaginatedProducts(req, res) {
@@ -175,26 +176,30 @@ class ProductController {
 
   async addProduct(req, res) {
     const product = req.body;
-    console.log("el hijueputa producto: ",product)
-    const productDTO = new ProductDTO(product);
+    const image = req.files.image;
 
-    try {
-      await productService.addProduct(productDTO);
-      return res.send({ status: "OK", message: "Product successfully added" });
-    } catch (error) {
-      CustomError.createError({
-        name: "Error-add-product",
-        cause: "Error, failed to add the product",
-        message: "Error, failed to add the product",
-        code: EErros.DATABASES_READ_ERROR,
-      });
-      req.logger.error({
-        message: "Error, failed to add the product",
-        cause: error,
-        Date: new Date().toLocaleTimeString(),
-        stack: JSON.stringify(error.stack, null, 2),
-      });
+    if(image && image.length > 0){
+      const {downdloadURL} = await uploadFile(image[0])
+      const productDTO = new ProductDTO(product, downdloadURL);
+      try {
+        await productService.addProduct(productDTO);
+        return res.send({ status: "OK", message: "Product successfully added", product: productDTO });
+      } catch (error) {
+        CustomError.createError({
+          name: "Error-add-product",
+          cause: "Error, failed to add the product",
+          message: "Error, failed to add the product",
+          code: EErros.DATABASES_READ_ERROR,
+        });
+        req.logger.error({
+          message: "Error, failed to add the product",
+          cause: error,
+          Date: new Date().toLocaleTimeString(),
+          stack: JSON.stringify(error.stack, null, 2),
+        });
+      }
     }
+  
   }
 
   async updateProduct(req, res) {

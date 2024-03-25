@@ -40,6 +40,9 @@ const productsSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  fecha:{
+    timestamps: true
+  }
 });
 
 productsSchema.plugin(mongoosePaginate);
