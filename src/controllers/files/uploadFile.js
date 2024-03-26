@@ -21,7 +21,7 @@ export async function uploadFile (file){
         fileMetaData
     )
 
-    await fileUploadPromise()
+    await fileUploadPromise
 
     const fileDownloadURL = await getDownloadURL(fileRef)
 
