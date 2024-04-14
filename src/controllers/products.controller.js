@@ -2,7 +2,7 @@ import { productService } from "../DAO/mongo/services/products.service.js";
 import ProductDTO from "../DAO/DTO/products.dto.js";
 import CustomError from "../DAO/mongo/services/errors/custom-error.js";
 import EErros from "../DAO/mongo/services/errors/enum.js";
-import { uploadFile } from "./files/uploadFile.js";
+import { deleteImage, uploadFile } from "./files/uploadFile.js";
 
 class ProductController {
   async getPaginatedProducts(req, res) {
@@ -178,8 +178,8 @@ class ProductController {
     const product = req.body;
     const image = req.files.image;
 
-    if(image && image.length > 0){
-      const {downdloadURL} = await uploadFile(image[0])
+    if (image && image.length > 0) {
+      const { downdloadURL } = await uploadFile(image[0])
       const productDTO = new ProductDTO(product, downdloadURL);
       try {
         await productService.addProduct(productDTO);
@@ -199,38 +199,70 @@ class ProductController {
         });
       }
     }
-  
+
   }
 
   async updateProduct(req, res) {
     try {
       const productId = req.params.pid;
       const changes = req.body;
+      const image2 = req.files.image;
 
-      const updatedProduct = await productService.updateProduct(
-        productId,
-        changes
-      );
+      if (image2 && image2.length > 0) {
+        const { downdloadURL } = await uploadFile(image2[0])
+        const image = downdloadURL
+        changes.image = image;
+        const product = await productService.getProductById(productId);
+        deleteImage(product.image)
+        try {
+          await productService.updateProduct(
+            productId,
+            changes
+          );
+          return res.send({ status: "OK", message: "Product successfully update", changes: changes });
+        } catch (error) {
+          CustomError.createError({
+            name: "Error-add-product",
+            cause: "Error, failed to add the product",
+            message: "Error, failed to add the product",
+            code: EErros.DATABASES_READ_ERROR,
+          });
+          req.logger.error({
+            message: "Error, failed to add the product",
+            cause: error,
+            Date: new Date().toLocaleTimeString(),
+            stack: JSON.stringify(error.stack, null, 2),
+          });
+        }
+      } else {
 
-      if (!updatedProduct) {
-        CustomError.createError({
-          name: "Error-update-product",
-          cause: "Product was not found",
-          message: "Product was not found",
-          code: EErros.DATABASES_READ_ERROR,
+        const updatedProduct = await productService.updateProduct(
+          productId,
+          changes
+        );
+
+        if (!updatedProduct) {
+          CustomError.createError({
+            name: "Error-update-product",
+            cause: "Product was not found",
+            message: "Product was not found",
+            code: EErros.DATABASES_READ_ERROR,
+          });
+          req.logger.error({
+            message: "Product was not found",
+            cause: error,
+            Date: new Date().toLocaleTimeString(),
+            stack: JSON.stringify(error.stack, null, 2),
+          });
+        }
+
+        return res.send({
+          status: "OK",
+          message: "Product successfully updated",
         });
-        req.logger.error({
-          message: "Product was not found",
-          cause: error,
-          Date: new Date().toLocaleTimeString(),
-          stack: JSON.stringify(error.stack, null, 2),
-        });
-      }
 
-      return res.send({
-        status: "OK",
-        message: "Product successfully updated",
-      });
+      }    
+      
     } catch (error) {
       CustomError.createError({
         name: "Error-update-product",
