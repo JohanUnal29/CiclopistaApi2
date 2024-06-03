@@ -206,7 +206,7 @@ class TicketController {
 
   async updateTicket(req, res) {
     try {
-      const ticketCode = req.params.referencia;
+      const ticketCode = req.params.code;
       const changes = req.body;
 
       const updatedTicket = await ticketService.updateTicket(ticketCode, changes);
