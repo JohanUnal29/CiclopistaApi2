@@ -261,8 +261,8 @@ class ProductController {
           message: "Product successfully updated",
         });
 
-      }    
-      
+      }
+
     } catch (error) {
       CustomError.createError({
         name: "Error-update-product",
@@ -282,6 +282,8 @@ class ProductController {
   async deleteProduct(req, res) {
     try {
       const productId = req.params.pid;
+      const product = await productService.getProductById(productId);
+      deleteImage(product.image)
       const deletedProduct = await productService.deleteProduct(productId);
 
       if (!deletedProduct) {
