@@ -18,7 +18,7 @@ router.get("/:uid", checkAdmin, ticketController.getTickets);
 
 router.get("/id/:pid/:uid", checkAdmin, ticketController.getTicketById);
 
-router.get("/status/:status/:uid", checkAdmin, ticketController.getTicketsByStatus);
+router.get("/status/:status/:uid", ticketController.getTicketsByStatus);
 
 router.get("/ticketsuser/:email", ticketController.getTicketsByUser);
 
