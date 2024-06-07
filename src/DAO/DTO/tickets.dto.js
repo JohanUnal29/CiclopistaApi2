@@ -2,6 +2,7 @@ export default class TicketDTO {
     constructor(ticketCode, ticket, cart) {
         this.code = ticketCode;
         this.purchase_datetime = new Date().toLocaleString('en-US', {
+            timeZone: 'America/Bogota',
             day: 'numeric',
             month: 'numeric',
             year: 'numeric',
