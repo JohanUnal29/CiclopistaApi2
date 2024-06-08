@@ -61,7 +61,7 @@ const ordersSchema = mongoose.Schema({
       _id: { type: String, required: true },
       title: { type: String, required: true },
       code: {type: String, required: true},
-      thumbnails: {type: String, default: ''},
+      image: {type: String, default: ''},
       quantity: { type: Number, required: true },
       price: { type: Number, required: true },
       

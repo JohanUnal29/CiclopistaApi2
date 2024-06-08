@@ -23,7 +23,7 @@ export default class TicketDTO {
             _id: item._id,
             title: item.title,
             code: item.code,
-            thumbnails: item.thumbnails,
+            image: item.image,
             quantity: item.cantidad,
             price: item.price,
         }));
