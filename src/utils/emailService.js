@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { entorno } from "../config.js";
-import {generarPDF} from "./pdfService.js";
+import generarPDF from "./pdfService.js";
 
 const transport = nodemailer.createTransport({
     service: "gmail",
