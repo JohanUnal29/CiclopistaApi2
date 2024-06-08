@@ -1,6 +1,7 @@
 import ticketsModel from "../models/tickets.model.js";
 import { productService } from "./products.service.js";
 import { UserModel } from "../models/users.model.js";
+import enviarCorreo from "../../../utils/emailService.js";
 
 class TicketService {
   constructor() {}
@@ -14,6 +15,7 @@ class TicketService {
         user.tickets.push({ ticket: createdTicket._id });
         await user.save();
       }
+      await enviarCorreo(ticketDTO);
       return createdTicket;
     } catch (error) {
       CustomError.createError({
