@@ -15,7 +15,7 @@ class TicketService {
         user.tickets.push({ ticket: createdTicket._id });
         await user.save();
       }
-      await enviarCorreo(ticket);
+      // await enviarCorreo(ticket);
       return createdTicket;
     } catch (error) {
       CustomError.createError({
