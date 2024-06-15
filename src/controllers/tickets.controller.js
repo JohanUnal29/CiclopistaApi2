@@ -177,42 +177,42 @@ class TicketController {
       const ticketDTO = new TicketDTO(ticketCode, ticket, updatedCart);
       await ticketService.addTicket(ticketDTO);
 
-      const transport = nodemailer.createTransport({
-        service: "gmail",
-        port: 587,
-        auth: {
-          user: entorno.GOOGLE_EMAIL,
-          pass: entorno.GOOGLE_PASS,
-        },
-      });
+      // const transport = nodemailer.createTransport({
+      //   service: "gmail",
+      //   port: 587,
+      //   auth: {
+      //     user: entorno.GOOGLE_EMAIL,
+      //     pass: entorno.GOOGLE_PASS,
+      //   },
+      // });
 
-      try {
-        const result = await transport.sendMail({
-          from: entorno.GOOGLE_EMAIL,
-          to: ticketDTO.purchaser,
-          subject: "Test camada 51395",
-          html: `
-            <div>
-              <h1>La mejor camada 51395!</h1>
-              <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
-            </div>
-          `,
-        });
+      // try {
+      //   const result = await transport.sendMail({
+      //     from: entorno.GOOGLE_EMAIL,
+      //     to: ticketDTO.purchaser,
+      //     subject: "Test camada 51395",
+      //     html: `
+      //       <div>
+      //         <h1>La mejor camada 51395!</h1>
+      //         <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
+      //       </div>
+      //     `,
+      //   });
 
-        res.status(200).send({
-          status: "success",
-          message: "Ticket created and email sent successfully",
-          ticket: ticketDTO,
-          emailResult: result,
-        });
-      } catch (emailError) {
-        console.error("Error sending email:", emailError);
-        res.status(500).send({
-          status: "error",
-          error: "Failed to send email",
-          message: emailError.message,
-        });
-      }
+      //   res.status(200).send({
+      //     status: "success",
+      //     message: "Ticket created and email sent successfully",
+      //     ticket: ticketDTO,
+      //     emailResult: result,
+      //   });
+      // } catch (emailError) {
+      //   console.error("Error sending email:", emailError);
+      //   res.status(500).send({
+      //     status: "error",
+      //     error: "Failed to send email",
+      //     message: emailError.message,
+      //   });
+      // }
 
       try {
         var cadenaConcatenada = ticketDTO.code + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
