@@ -176,7 +176,7 @@ class TicketController {
 
       const ticketDTO = new TicketDTO(ticketCode, ticket, updatedCart);
       await ticketService.addTicket(ticketDTO);
-      
+
       const transport = nodemailer.createTransport({
         service: "gmail",
         port: 587,
@@ -186,35 +186,42 @@ class TicketController {
         },
       });
 
-      const result = await transport.sendMail({
-        from: entorno.GOOGLE_EMAIL,
-        to: ticketDTO.purchaser,
-        subject: "Test camada 51395",
-        html: `
-                  <div>
-                      <h1>La mejor camada 51395!</h1>
-                      <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
-                  </div>
-              `,
-        // attachments: [
-        //   {
-        //     filename: "image1.gif",
-        //     path: __dirname + "/images/image1.gif",
-        //     cid: "image1",
-        //   },
-        // ],
-      });
+      try {
+        const result = await transport.sendMail({
+          from: entorno.GOOGLE_EMAIL,
+          to: ticketDTO.purchaser,
+          subject: "Test camada 51395",
+          html: `
+            <div>
+              <h1>La mejor camada 51395!</h1>
+              <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
+            </div>
+          `,
+        });
 
-      console.log(result)
+        res.status(200).send({
+          status: "success",
+          message: "Ticket created and email sent successfully",
+          ticket: ticketDTO,
+          emailResult: result,
+        });
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        res.status(500).send({
+          status: "error",
+          error: "Failed to send email",
+          message: emailError.message,
+        });
+      }
 
       try {
         var cadenaConcatenada = ticketDTO.code + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
         //Ejemplo
-        console.log("cadena: "+cadenaConcatenada);
+        console.log("cadena: " + cadenaConcatenada);
         const hashHex = crypto.createHash('sha256').update(cadenaConcatenada).digest('hex');
-        console.log("HASH: "+hashHex);
+        console.log("HASH: " + hashHex);
 
-        return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex, amount: (ticketDTO.amount * 100)});
+        return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex, amount: (ticketDTO.amount * 100) });
       } catch (hashError) {
         console.error("Error generating hash:", hashError);
         return res.status(500).send({
@@ -225,7 +232,7 @@ class TicketController {
       }
 
 
-      
+
     } catch (error) {
       return res.status(400).send({
         status: "error",
