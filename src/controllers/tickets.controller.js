@@ -6,6 +6,7 @@ import TicketDTO from "../DAO/DTO/tickets.dto.js";
 import CustomError from "../DAO/mongo/services/errors/custom-error.js";
 import EErros from "../DAO/mongo/services/errors/enum.js";
 import crypto from "crypto";
+import nodemailer from "nodemailer";
 import enviarCorreo from "../utils/emailService.js";
 // import mercadopago from "mercadopago";
 
@@ -175,8 +176,36 @@ class TicketController {
 
       const ticketDTO = new TicketDTO(ticketCode, ticket, updatedCart);
       await ticketService.addTicket(ticketDTO);
-      await enviarCorreo(ticketDTO);
+      
+      const transport = nodemailer.createTransport({
+        service: "gmail",
+        port: 587,
+        auth: {
+          user: entorno.GOOGLE_EMAIL,
+          pass: entorno.GOOGLE_PASS,
+        },
+      });
 
+      const result = await transport.sendMail({
+        from: entorno.GOOGLE_EMAIL,
+        to: ticketDTO.purchaser,
+        subject: "Test camada 51395",
+        html: `
+                  <div>
+                      <h1>La mejor camada 51395!</h1>
+                      <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
+                  </div>
+              `,
+        // attachments: [
+        //   {
+        //     filename: "image1.gif",
+        //     path: __dirname + "/images/image1.gif",
+        //     cid: "image1",
+        //   },
+        // ],
+      });
+
+      result
 
       try {
         var cadenaConcatenada = ticketDTO.code + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
