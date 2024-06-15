@@ -16,7 +16,14 @@ import { entorno } from "../config.js";
 //   access_token: entorno.MERCADOPAGO_KEY,
 // });
 
-
+const transport = nodemailer.createTransport({
+  service: "gmail",
+  port: 587,
+  auth: {
+    user: entorno.GOOGLE_EMAIL,
+    pass: entorno.GOOGLE_PASS,
+  },
+});
 
 class TicketController {
   async getTickets(req, res) {
@@ -177,14 +184,7 @@ class TicketController {
       const ticketDTO = new TicketDTO(ticketCode, ticket, updatedCart);
       await ticketService.addTicket(ticketDTO);
 
-      // const transport = nodemailer.createTransport({
-      //   service: "gmail",
-      //   port: 587,
-      //   auth: {
-      //     user: entorno.GOOGLE_EMAIL,
-      //     pass: entorno.GOOGLE_PASS,
-      //   },
-      // });
+
 
       // try {
       //   const result = await transport.sendMail({
@@ -220,6 +220,20 @@ class TicketController {
         console.log("cadena: " + cadenaConcatenada);
         const hashHex = crypto.createHash('sha256').update(cadenaConcatenada).digest('hex');
         console.log("HASH: " + hashHex);
+
+        const result = await transport.sendMail({
+          from: entorno.GOOGLE_EMAIL,
+          to: ticketDTO.purchaser,
+          subject: "Test camada 51395",
+          html: `
+                <div>
+                  <h1>La mejor camada 51395!</h1>
+                  <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
+                </div>
+              `,
+        });
+
+        result
 
         return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex, amount: (ticketDTO.amount * 100) });
       } catch (hashError) {
