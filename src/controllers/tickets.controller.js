@@ -205,7 +205,7 @@ class TicketController {
         // ],
       });
 
-      result
+      console.log(result)
 
       try {
         var cadenaConcatenada = ticketDTO.code + (ticketDTO.amount * 100) + cop + SecretoSeguridad;
