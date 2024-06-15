@@ -221,19 +221,23 @@ class TicketController {
         const hashHex = crypto.createHash('sha256').update(cadenaConcatenada).digest('hex');
         console.log("HASH: " + hashHex);
 
-        const result = await transport.sendMail({
-          from: entorno.GOOGLE_EMAIL,
-          to: ticketDTO.purchaser,
-          subject: "Test camada 51395",
-          html: `
-                <div>
-                  <h1>La mejor camada 51395!</h1>
-                  <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
-                </div>
-              `,
-        });
+        // const result = await transport.sendMail({
+        //   from: entorno.GOOGLE_EMAIL,
+        //   to: ticketDTO.purchaser,
+        //   subject: "Test camada 51395",
+        //   html: `
+        //         <div>
+        //           <h1>La mejor camada 51395!</h1>
+        //           <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
+        //         </div>
+        //       `,
+        // });
 
-        result
+        // result
+
+        console.log('GOOGLE_EMAIL:', entorno.GOOGLE_EMAIL);
+        console.log('GOOGLE_PASS:', entorno.GOOGLE_PASS);
+
 
         return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex, amount: (ticketDTO.amount * 100) });
       } catch (hashError) {
