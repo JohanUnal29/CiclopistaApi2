@@ -8,9 +8,11 @@ import EErros from "../DAO/mongo/services/errors/enum.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import enviarCorreo from "../utils/emailService.js";
+
 // import mercadopago from "mercadopago";
 
 import { entorno } from "../config.js";
+import generarPDF from "../utils/pdfService.js";
 
 // mercadopago.configure({
 //   access_token: entorno.MERCADOPAGO_KEY,
@@ -224,11 +226,18 @@ class TicketController {
 
         (async () => {
           try {
+            const pdfPath = await generarPDF(ticketDTO);
             const result = await transport.sendMail({
               from: "importacionesciclopistasas@gmail.com",
               to: 'johan.ardilah@gmail.com', // Cambia esto a una dirección de correo válida para la prueba
               subject: 'Test Email',
               html: '<p>This is a test email.</p>',
+              attachments: [
+                {
+                  filename: `${ticketDTO.code}.pdf`,
+                  path: pdfPath,
+                }
+              ],
             });
             console.log('Test Email sent:', result);
           } catch (error) {
