@@ -2,13 +2,15 @@ import PDFDocument from 'pdfkit';
 
 import path from 'path';
 
+const __dirname = path.resolve();
+
 const generarPDF = (ticketDTO) => {
   return new Promise((resolve, reject) => {
-    const dir = './tickets';
+    const dir = path.join(__dirname, 'tickets');
     const filePath = path.join(dir, `${ticketDTO.code}.pdf`);
 
     // Verificar si la carpeta 'tickets' existe, si no, crearla
-    if (!fs.existsSync(dir)){
+    if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
 
