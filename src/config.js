@@ -23,6 +23,9 @@ entorno.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 entorno.SecretoSeguridad = process.env.SecretoSeguridad;
 
+entorno.GOOGLE_MAIL = process.env.GOOGLE_MAIL;
+entorno.GOOGLE_PASS = process.env.GOOGLE_PASS;
+
 /* export default {
   port: process.env.PORT,
   mongoUrl: process.env.MONGO_URL,
