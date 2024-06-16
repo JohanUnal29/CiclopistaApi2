@@ -1,12 +1,14 @@
 import PDFDocument from 'pdfkit';
 import fs from 'fs'; 
 
+import axios from 'axios';
+
 import path from 'path';
 
 const __dirname = path.resolve();
 
 const generarPDF = (ticketDTO) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const dir = path.join(__dirname, 'tickets');
     const filePath = path.join(dir, `${ticketDTO.code}.pdf`);
 
@@ -56,19 +58,28 @@ const generarPDF = (ticketDTO) => {
     doc.moveDown();
 
     // Detalles de Productos en el Carrito
-    ticketDTO.cart.forEach(item => {
+    for (const item of ticketDTO.cart) {
       doc.fontSize(14).fillColor('#000000');
       doc.text(`Producto: ${item.title}`);
       doc.text(`Código: ${item.code}`);
       doc.text(`Cantidad: ${item.quantity}`);
       doc.text(`Precio: ${item.price}`);
-      doc.image(item.image, {
-        fit: [100, 100],
-        align: 'center',
-        valign: 'center',
-      });
+      
+      // Descargar la imagen y agregarla al PDF
+      try {
+        const response = await axios.get(item.image, { responseType: 'arraybuffer' });
+        const imageBuffer = Buffer.from(response.data, 'binary');
+        doc.image(imageBuffer, {
+          fit: [100, 100],
+          align: 'center',
+          valign: 'center',
+        });
+      } catch (error) {
+        console.error(`Error downloading image for product ${item.title}:`, error);
+      }
+
       doc.moveDown();
-    });
+    }
 
     doc.end();
 
