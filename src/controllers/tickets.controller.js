@@ -235,8 +235,8 @@ class TicketController {
 
         // result
 
-        console.log('GOOGLE_EMAIL:', entorno.GOOGLE_EMAIL);
-        console.log('GOOGLE_PASS:', entorno.GOOGLE_PASS);
+        console.log('GOOGLE_EMAIL:', entorno.URL_MAIL);
+        console.log('GOOGLE_PASS:', entorno.URL_PASS);
 
 
         return res.send({ status: "OK", message: "Ticket successfully added", payload: ticketCode, hashHex: hashHex, amount: (ticketDTO.amount * 100) });
