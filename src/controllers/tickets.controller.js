@@ -19,9 +19,10 @@ import { entorno } from "../config.js";
 const transport = nodemailer.createTransport({
   service: "gmail",
   port: 587,
+  secure: false, // Asegúrate de que esto sea falso para el puerto 587
   auth: {
-    user: entorno.GOOGLE_EMAIL,
-    pass: entorno.GOOGLE_PASS,
+    user: "importacionesciclopistasas@gmail.com",
+    pass: "hmdm kfqn irza ctli",
   },
 });
 
@@ -221,19 +222,19 @@ class TicketController {
         const hashHex = crypto.createHash('sha256').update(cadenaConcatenada).digest('hex');
         console.log("HASH: " + hashHex);
 
-        const result = await transport.sendMail({
-          from: entorno.GOOGLE_EMAIL,
-          to: ticketDTO.purchaser,
-          subject: "Test camada 51395",
-          html: `
-                <div>
-                  <h1>La mejor camada 51395!</h1>
-                  <p>pero un poco silenciosa.... hay que hablar un poco mas!!!!</p>
-                </div>
-              `,
-        });
-
-        result
+        (async () => {
+          try {
+            const result = await transport.sendMail({
+              from: "importacionesciclopistasas@gmail.com",
+              to: 'johan.ardilah@gmail.com', // Cambia esto a una dirección de correo válida para la prueba
+              subject: 'Test Email',
+              html: '<p>This is a test email.</p>',
+            });
+            console.log('Test Email sent:', result);
+          } catch (error) {
+            console.error('Error sending test email:', error);
+          }
+        })();
 
         
 
