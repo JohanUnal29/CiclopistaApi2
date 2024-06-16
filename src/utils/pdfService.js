@@ -56,7 +56,7 @@ const generarPDF = (ticketDTO) => {
     doc.moveDown();
 
     // Logo de la empresa
-    const logoPath = path.join(__dirname, 'logo', 'nombre-del-logo.png'); // Ajusta el nombre del archivo de tu logo
+    const logoPath = path.join(__dirname, 'logo', 'cplogo.png'); // Ajusta el nombre del archivo de tu logo
     if (fs.existsSync(logoPath)) {
       const logoBuffer = fs.readFileSync(logoPath);
       doc.image(logoBuffer, 400, 10, { fit: [100, 100], align: 'right' });
@@ -73,26 +73,34 @@ const generarPDF = (ticketDTO) => {
       });
     doc.moveDown();
 
-    // Detalles de Productos en el Carrito
+    // Crear la tabla de productos
+    const tableRows = [];
     for (const item of ticketDTO.cart) {
-      doc.font(bodyFont).fontSize(12).fillColor(bodyColor);
-      doc.text(`Producto: ${item.title}`);
-      doc.text(`Código: ${item.code}`);
-      doc.text(`Cantidad: ${item.quantity}`);
-      doc.text(`Precio: ${item.price}`);
+      const rowData = [
+        item.title,
+        item.code,
+        item.quantity.toString(),
+        item.price.toString(),
+      ];
+      tableRows.push(rowData);
 
       // Descargar la imagen y agregarla al PDF
       try {
         const response = await axios.get(item.image, { responseType: 'arraybuffer' });
         const imageBuffer = Buffer.from(response.data, 'binary');
-        doc.image(imageBuffer, 50, doc.y + 10, { fit: [100, 100] });
-        doc.moveDown();
+        doc.image(imageBuffer, { width: 50, height: 50 });
       } catch (error) {
         console.error(`Error downloading image for product ${item.title}:`, error);
         doc.text('Imagen no disponible');
-        doc.moveDown();
       }
     }
+
+    // Configurar la tabla
+    doc.table(tableRows, {
+      headers: ['Producto', 'Código', 'Cantidad', 'Precio'],
+      startY: doc.y + 10,
+      margin: { top: 10 },
+    });
 
     doc.end();
 
