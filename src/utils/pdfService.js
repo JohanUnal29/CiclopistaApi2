@@ -22,10 +22,17 @@ const generarPDF = (ticketDTO) => {
 
     doc.pipe(stream);
 
+    // Configuración de estilos
+    const headerFont = 'Helvetica-Bold';
+    const bodyFont = 'Helvetica';
+    const headerColor = '#336699';
+    const bodyColor = '#000000';
+
     // Título
     doc
-      .fontSize(20)
-      .fillColor('#0000FF')
+      .font(headerFont)
+      .fontSize(24)
+      .fillColor(headerColor)
       .text('Detalles del Ticket', {
         align: 'center',
         underline: true,
@@ -33,7 +40,7 @@ const generarPDF = (ticketDTO) => {
     doc.moveDown();
 
     // Información del Ticket
-    doc.fontSize(14).fillColor('#000000');
+    doc.font(bodyFont).fontSize(12).fillColor(bodyColor);
     doc.text(`Código: ${ticketDTO.code}`);
     doc.text(`Fecha: ${ticketDTO.purchase_datetime}`);
     doc.text(`Nombre: ${ticketDTO.name}`);
@@ -45,40 +52,46 @@ const generarPDF = (ticketDTO) => {
     doc.text(`Barrio: ${ticketDTO.barrio}`);
     doc.text(`Dirección: ${ticketDTO.direccion}`);
     doc.text(`Referencias de entrega: ${ticketDTO.referencias_entrega}`);
-    doc.text(`Monto: ${ticketDTO.amount}`);
+    doc.text(`Monto: ${ticketDTO.amount}`, { bold: true });
     doc.moveDown();
 
+    // Logo de la empresa
+    const logoPath = path.join(__dirname, 'logo', 'nombre-del-logo.png'); // Ajusta el nombre del archivo de tu logo
+    if (fs.existsSync(logoPath)) {
+      const logoBuffer = fs.readFileSync(logoPath);
+      doc.image(logoBuffer, 400, 10, { fit: [100, 100], align: 'right' });
+    }
+
     // Título de Productos en el Carrito
+    doc.moveDown();
     doc
-      .fontSize(16)
-      .fillColor('#0000FF')
-      .text('Productos en el carrito:', {
+      .font(headerFont)
+      .fontSize(18)
+      .fillColor(headerColor)
+      .text('Productos en el carrito', {
         underline: true,
       });
     doc.moveDown();
 
     // Detalles de Productos en el Carrito
     for (const item of ticketDTO.cart) {
-      doc.fontSize(14).fillColor('#000000');
+      doc.font(bodyFont).fontSize(12).fillColor(bodyColor);
       doc.text(`Producto: ${item.title}`);
       doc.text(`Código: ${item.code}`);
       doc.text(`Cantidad: ${item.quantity}`);
       doc.text(`Precio: ${item.price}`);
-      
+
       // Descargar la imagen y agregarla al PDF
       try {
         const response = await axios.get(item.image, { responseType: 'arraybuffer' });
         const imageBuffer = Buffer.from(response.data, 'binary');
-        doc.image(imageBuffer, {
-          fit: [100, 100],
-          align: 'center',
-          valign: 'center',
-        });
+        doc.image(imageBuffer, 50, doc.y + 10, { fit: [100, 100] });
+        doc.moveDown();
       } catch (error) {
         console.error(`Error downloading image for product ${item.title}:`, error);
+        doc.text('Imagen no disponible');
+        doc.moveDown();
       }
-
-      doc.moveDown();
     }
 
     doc.end();
