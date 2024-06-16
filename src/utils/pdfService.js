@@ -73,34 +73,45 @@ const generarPDF = (ticketDTO) => {
       });
     doc.moveDown();
 
-    // Crear la tabla de productos
-    const tableRows = [];
+    // Configuración de la tabla de productos
+    const columnWidths = [150, 100, 50, 100, 100]; // Ajusta los anchos de columna según sea necesario
+
+    // Encabezados de la tabla
+    doc.font(headerFont).fontSize(12).fillColor(bodyColor);
+    doc.text('Producto', { width: columnWidths[0], align: 'left' });
+    doc.text('Código', { width: columnWidths[1], align: 'left' });
+    doc.text('Cantidad', { width: columnWidths[2], align: 'left' });
+    doc.text('Precio', { width: columnWidths[3], align: 'left' });
+    doc.text('Imagen', { width: columnWidths[4], align: 'left' });
+    doc.moveDown();
+
+    // Detalles de Productos en el Carrito
     for (const item of ticketDTO.cart) {
-      const rowData = [
-        item.title,
-        item.code,
-        item.quantity.toString(),
-        item.price.toString(),
-      ];
-      tableRows.push(rowData);
+      // Nombre del producto
+      doc.font(bodyFont).fontSize(12).fillColor(bodyColor);
+      doc.text(item.title, { width: columnWidths[0], align: 'left' });
+
+      // Código
+      doc.text(item.code.toString(), { width: columnWidths[1], align: 'left' });
+
+      // Cantidad
+      doc.text(item.quantity.toString(), { width: columnWidths[2], align: 'left' });
+
+      // Precio
+      doc.text(item.price.toString(), { width: columnWidths[3], align: 'left' });
 
       // Descargar la imagen y agregarla al PDF
       try {
         const response = await axios.get(item.image, { responseType: 'arraybuffer' });
         const imageBuffer = Buffer.from(response.data, 'binary');
-        doc.image(imageBuffer, { width: 50, height: 50 });
+        doc.image(imageBuffer, doc.x + 10, doc.y - 12, { fit: [50, 50] });
+        doc.moveDown();
       } catch (error) {
         console.error(`Error downloading image for product ${item.title}:`, error);
         doc.text('Imagen no disponible');
+        doc.moveDown();
       }
     }
-
-    // Configurar la tabla
-    doc.table(tableRows, {
-      headers: ['Producto', 'Código', 'Cantidad', 'Precio'],
-      startY: doc.y + 10,
-      margin: { top: 10 },
-    });
 
     doc.end();
 
