@@ -11,6 +11,7 @@ export default class TicketDTO {
             hour12: true
         });
         this.name = ticket.name;
+        this.identification_document = ticket.identification_document;
         this.purchaser = ticket.purchaser;
         this.phone = ticket.phone;
         this.message = ticket.message;

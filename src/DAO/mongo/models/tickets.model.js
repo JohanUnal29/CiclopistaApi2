@@ -16,6 +16,10 @@ const ordersSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  identification_document: {
+    type: String,
+    required: true,
+  },
   purchaser: {
     type: String,
     required: true,

@@ -23,8 +23,8 @@ const transport = nodemailer.createTransport({
   port: 587,
   secure: false, // Asegúrate de que esto sea falso para el puerto 587
   auth: {
-    user: "importacionesciclopistasas@gmail.com",
-    pass: "hmdm kfqn irza ctli",
+    user: entorno.GOOGLE_MAIL,
+    pass: entorno.GOOGLE_PASS,
   },
 });
 
@@ -198,9 +198,9 @@ class TicketController {
           try {
             const pdfPath = await generarPDF(ticketDTO);
             const result = await transport.sendMail({
-              from: "importacionesciclopistasas@gmail.com",
-              to: 'johan.ardilah@gmail.com', // Cambia esto a una dirección de correo válida para la prueba
-              subject: 'Test Email',
+              from: entorno.GOOGLE_MAIL,
+              to: `${ticketDTO.purchaser},johan.ardilah@gmail.com`, // Cambia esto a una dirección de correo válida para la prueba
+              subject: 'Orden',
               html: '<p>This is a test email.</p>',
               attachments: [
                 {
