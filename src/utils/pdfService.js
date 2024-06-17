@@ -1,4 +1,5 @@
 import PDFDocument from 'pdfkit';
+import PDFTable from 'pdfkit-table';
 import fs from 'fs'; 
 
 import axios from 'axios';
@@ -12,7 +13,6 @@ const generarPDF = (ticketDTO) => {
     const dir = path.join(__dirname, 'tickets');
     const filePath = path.join(dir, `${ticketDTO.code}.pdf`);
 
-    // Verificar si la carpeta 'tickets' existe, si no, crearla
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
@@ -56,7 +56,7 @@ const generarPDF = (ticketDTO) => {
     doc.moveDown();
 
     // Logo de la empresa
-    const logoPath = path.join(__dirname, 'logo', 'cplogo.png'); // Ajusta el nombre del archivo de tu logo
+    const logoPath = path.join(__dirname, 'logo', 'cplogo.png'); // Ruta al logo de tu empresa
     if (fs.existsSync(logoPath)) {
       const logoBuffer = fs.readFileSync(logoPath);
       doc.image(logoBuffer, 400, 10, { fit: [100, 100], align: 'right' });
@@ -73,45 +73,50 @@ const generarPDF = (ticketDTO) => {
       });
     doc.moveDown();
 
-    // Configuración de la tabla de productos
-    const columnWidths = [150, 100, 50, 100, 100]; // Ajusta los anchos de columna según sea necesario
+    // Configuración de la tabla usando pdfkit-table
+    const table = {
+      title: 'Productos en el carrito',
+      headers: ['Producto', 'Código', 'Cantidad', 'Precio', 'Imagen'],
+      rows: [],
+    };
 
-    // Encabezados de la tabla
-    doc.font(headerFont).fontSize(12).fillColor(bodyColor);
-    doc.text('Producto', { width: columnWidths[0], align: 'left' });
-    doc.text('Código', { width: columnWidths[1], align: 'left' });
-    doc.text('Cantidad', { width: columnWidths[2], align: 'left' });
-    doc.text('Precio', { width: columnWidths[3], align: 'left' });
-    doc.text('Imagen', { width: columnWidths[4], align: 'left' });
-    doc.moveDown();
-
-    // Detalles de Productos en el Carrito
     for (const item of ticketDTO.cart) {
-      // Nombre del producto
-      doc.font(bodyFont).fontSize(12).fillColor(bodyColor);
-      doc.text(item.title, { width: columnWidths[0], align: 'left' });
-
-      // Código
-      doc.text(item.code.toString(), { width: columnWidths[1], align: 'left' });
-
-      // Cantidad
-      doc.text(item.quantity.toString(), { width: columnWidths[2], align: 'left' });
-
-      // Precio
-      doc.text(item.price.toString(), { width: columnWidths[3], align: 'left' });
-
       // Descargar la imagen y agregarla al PDF
       try {
         const response = await axios.get(item.image, { responseType: 'arraybuffer' });
         const imageBuffer = Buffer.from(response.data, 'binary');
-        doc.image(imageBuffer, doc.x + 10, doc.y - 12, { fit: [50, 50] });
-        doc.moveDown();
+        const imageDataURI = `data:image/png;base64,${imageBuffer.toString('base64')}`;
+
+        // Agregar fila a la tabla con los datos del producto
+        table.rows.push([
+          item.title,
+          item.code.toString(),
+          item.quantity.toString(),
+          item.price.toString(),
+          { image: imageDataURI, fit: [50, 50] }, // Objeto con la imagen y ajuste de tamaño
+        ]);
       } catch (error) {
         console.error(`Error downloading image for product ${item.title}:`, error);
-        doc.text('Imagen no disponible');
-        doc.moveDown();
+        // Puedes manejar el error según tus necesidades (por ejemplo, mostrar un texto alternativo)
+        table.rows.push([
+          item.title,
+          item.code.toString(),
+          item.quantity.toString(),
+          item.price.toString(),
+          'Imagen no disponible',
+        ]);
       }
     }
+
+    // Opciones adicionales para la tabla
+    const tableOptions = {
+      width: 500,
+      prepareHeader: () => doc.font(headerFont).fontSize(10).fillColor(headerColor),
+      prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => doc.font(bodyFont).fontSize(10),
+    };
+
+    // Generar la tabla en el documento PDF
+    await PDFTable.create(doc, table, tableOptions);
 
     doc.end();
 
