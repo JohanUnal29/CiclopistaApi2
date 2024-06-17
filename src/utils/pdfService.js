@@ -50,9 +50,15 @@ const generarPDF = (ticketDTO) => {
         {
           table: {
             headerRows: 1,
-            widths: [100, '*', 'auto', 'auto'],
+            widths: [100, '*', 'auto', 'auto', 'auto'],
             body: [
-              [{ text: 'Imagen', style: 'tableHeader' }, { text: 'Producto', style: 'tableHeader' }, { text: 'Código', style: 'tableHeader' }, { text: 'Cantidad', style: 'tableHeader' }, { text: 'Precio', style: 'tableHeader' }]
+              [
+                { text: 'Imagen', style: 'tableHeader' },
+                { text: 'Producto', style: 'tableHeader' },
+                { text: 'Código', style: 'tableHeader' },
+                { text: 'Cantidad', style: 'tableHeader' },
+                { text: 'Precio', style: 'tableHeader' }
+              ]
             ]
           },
           margin: [0, 10, 0, 10]
@@ -79,23 +85,27 @@ const generarPDF = (ticketDTO) => {
     }
 
     // Cargar imágenes de los productos y construir las filas de la tabla
+    const tableIndex = docDefinition.content.findIndex(
+      (item) => item.table
+    );
+
+    if (tableIndex === -1) {
+      reject(new Error('No se encontró la tabla en el contenido del documento'));
+      return;
+    }
+
+    const tableBody = docDefinition.content[tableIndex].table.body;
+
     for (const item of ticketDTO.cart) {
       const imageBase64 = await loadImage(item.image);
       const row = [
-        { image: imageBase64 ? 'data:image/png;base64,' + imageBase64 : null, fit: [50, 50] },
+        imageBase64 ? { image: 'data:image/png;base64,' + imageBase64, fit: [50, 50] } : 'Sin imagen',
         item.title,
         item.code,
         item.quantity.toString(),
         item.price.toString()
       ];
-      // Asegurarse de que la tabla y el cuerpo existan antes de agregar la fila
-      if (docDefinition.content[13] && docDefinition.content[13].table && docDefinition.content[13].table.body) {
-        docDefinition.content[13].table.body.push(row);
-      } else {
-        console.error('La tabla o el cuerpo de la tabla no están definidos');
-        reject(new Error('La tabla o el cuerpo de la tabla no están definidos'));
-        return;
-      }
+      tableBody.push(row);
     }
 
     // Generar el PDF
