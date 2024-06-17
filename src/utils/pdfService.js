@@ -1,123 +1,103 @@
 import fs from 'fs';
-import axios from 'axios';
 import path from 'path';
-import PDFDocument from 'pdfkit';
-import PDFKitTable from 'pdfkit-table';
+import axios from 'axios';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
+// Registrar las fuentes necesarias
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const __dirname = path.resolve();
 
-const generarPDF = async (ticketDTO) => {
-  const dir = path.join(__dirname, 'tickets');
-  const filePath = path.join(dir, `${ticketDTO.code}.pdf`);
+const generarPDF = (ticketDTO) => {
+  return new Promise(async (resolve, reject) => {
+    const dir = path.join(__dirname, 'tickets');
+    const filePath = path.join(dir, `${ticketDTO.code}.pdf`);
 
-  // Verificar si la carpeta 'tickets' existe, si no, crearla
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-
-  const doc = new PDFDocument();
-  const stream = fs.createWriteStream(filePath);
-
-  doc.pipe(stream);
-
-  // Configuración de estilos
-  const headerFont = 'Helvetica-Bold';
-  const bodyFont = 'Helvetica'; // Usando Helvetica estándar de pdfkit
-  const headerColor = '#336699';
-  const bodyColor = '#000000';
-
-  // Título
-  doc
-    .font(headerFont)
-    .fontSize(24)
-    .fillColor(headerColor)
-    .text('Detalles del Ticket', {
-      align: 'center',
-      underline: true,
-    });
-  doc.moveDown();
-
-  // Información del Ticket
-  doc.font(bodyFont).fontSize(12).fillColor(bodyColor);
-  doc.text(`Código: ${ticketDTO.code}`);
-  doc.text(`Fecha: ${ticketDTO.purchase_datetime}`);
-  doc.text(`Nombre: ${ticketDTO.name}`);
-  doc.text(`Comprador: ${ticketDTO.purchaser}`);
-  doc.text(`Teléfono: ${ticketDTO.phone}`);
-  doc.text(`Mensaje: ${ticketDTO.message}`);
-  doc.text(`Departamento: ${ticketDTO.departamento}`);
-  doc.text(`Ciudad o Municipio: ${ticketDTO.ciudad_o_municipio}`);
-  doc.text(`Barrio: ${ticketDTO.barrio}`);
-  doc.text(`Dirección: ${ticketDTO.direccion}`);
-  doc.text(`Referencias de entrega: ${ticketDTO.referencias_entrega}`);
-  doc.text(`Monto: ${ticketDTO.amount}`, { bold: true });
-  doc.moveDown();
-
-  // Logo de la empresa
-  const logoPath = path.join(__dirname, 'logo', 'cplogo.png'); // Ajusta el nombre del archivo de tu logo
-  if (fs.existsSync(logoPath)) {
-    const logoBuffer = fs.readFileSync(logoPath);
-    doc.image(logoBuffer, 400, 10, { fit: [100, 100], align: 'right' });
-  }
-
-  // Título de Productos en el Carrito
-  doc.moveDown();
-  doc
-    .font(headerFont)
-    .fontSize(18)
-    .fillColor(headerColor)
-    .text('Productos en el carrito', {
-      underline: true,
-    });
-  doc.moveDown();
-
-  // Crear la tabla de productos usando pdfkit-table
-  const tableRows = [];
-
-  for (const item of ticketDTO.cart) {
-    let imageDataUri = '';
-    try {
-      const response = await axios.get(item.image, { responseType: 'arraybuffer' });
-      const imageBuffer = Buffer.from(response.data, 'binary');
-      imageDataUri = `data:image/jpeg;base64,${imageBuffer.toString('base64')}`;
-    } catch (error) {
-      console.error(`Error downloading image for product ${item.title}:`, error);
+    // Verificar si la carpeta 'tickets' existe, si no, crearla
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
     }
 
-    const rowData = {
-      Producto: { image: imageDataUri, title: item.title }, // Incluir la imagen y el título del producto
-      Código: item.code,
-      Cantidad: item.quantity.toString(),
-      Precio: item.price.toString(),
+    // Función para cargar la imagen desde URL y convertirla a base64
+    const loadImage = async (url) => {
+      try {
+        const response = await axios.get(url, { responseType: 'arraybuffer' });
+        return Buffer.from(response.data, 'binary').toString('base64');
+      } catch (error) {
+        console.error('Error downloading image:', error);
+        return null;
+      }
     };
 
-    tableRows.push(rowData);
-  }
+    // Definir el contenido del documento
+    const docDefinition = {
+      content: [
+        { text: 'Detalles del Ticket', style: 'header' },
+        { text: 'Código: ' + ticketDTO.code },
+        { text: 'Fecha: ' + ticketDTO.purchase_datetime },
+        { text: 'Nombre: ' + ticketDTO.name },
+        { text: 'Comprador: ' + ticketDTO.purchaser },
+        { text: 'Teléfono: ' + ticketDTO.phone },
+        { text: 'Mensaje: ' + ticketDTO.message },
+        { text: 'Departamento: ' + ticketDTO.departamento },
+        { text: 'Ciudad o Municipio: ' + ticketDTO.ciudad_o_municipio },
+        { text: 'Barrio: ' + ticketDTO.barrio },
+        { text: 'Dirección: ' + ticketDTO.direccion },
+        { text: 'Referencias de entrega: ' + ticketDTO.referencias_entrega },
+        { text: 'Monto: ' + ticketDTO.amount, style: 'bold' },
+        { text: 'Productos en el carrito', style: 'subheader' },
+        {
+          table: {
+            headerRows: 1,
+            widths: [100, '*', 'auto', 'auto'],
+            body: [
+              [{ text: 'Imagen', style: 'tableHeader' }, { text: 'Producto', style: 'tableHeader' }, { text: 'Código', style: 'tableHeader' }, { text: 'Cantidad', style: 'tableHeader' }, { text: 'Precio', style: 'tableHeader' }]
+            ]
+          },
+          margin: [0, 10, 0, 10]
+        }
+      ],
+      styles: {
+        header: { fontSize: 24, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
+        subheader: { fontSize: 18, bold: true, margin: [0, 10, 0, 5] },
+        bold: { bold: true },
+        tableHeader: { bold: true, fillColor: '#CCCCCC' }
+      },
+      defaultStyle: { fontSize: 12, margin: [0, 5, 0, 5] }
+    };
 
-  // Configurar y dibujar la tabla usando pdfkit-table
-  const table = new PDFKitTable(doc, {
-    margin: { top: 10 },
-    headers: ['Producto', 'Código', 'Cantidad', 'Precio'],
-    prepareHeader: () => doc.font(headerFont).fontSize(8).fillColor(headerColor),
-    prepareRow: (row, indexColumn, indexRow, rectRow) => doc.font(bodyFont).fontSize(8).fillColor(bodyColor),
-  });
+    // Cargar logo
+    const logoPath = path.join(__dirname, 'logo', 'cplogo.png');
+    if (fs.existsSync(logoPath)) {
+      const logoBase64 = fs.readFileSync(logoPath, { encoding: 'base64' });
+      docDefinition.content.unshift({
+        image: 'data:image/png;base64,' + logoBase64,
+        fit: [100, 100],
+        alignment: 'right'
+      });
+    }
 
-  table.addPlugin(PDFKitTable.autoTablePlugin);
+    // Cargar imágenes de los productos y construir las filas de la tabla
+    for (const item of ticketDTO.cart) {
+      const imageBase64 = await loadImage(item.image);
+      const row = [
+        { image: imageBase64 ? 'data:image/png;base64,' + imageBase64 : null, fit: [50, 50] },
+        item.title,
+        item.code,
+        item.quantity.toString(),
+        item.price.toString()
+      ];
+      docDefinition.content[13].table.body.push(row);
+    }
 
-  await table.startNewPage();
-
-  for (const row of tableRows) {
-    await table.addBodyRow({
-      Producto: { image: row.Producto.image, width: 50, height: 50 }, // Ajusta el tamaño de la imagen según tus necesidades
-      Código: row.Código,
-      Cantidad: row.Cantidad,
-      Precio: row.Precio,
+    // Generar el PDF
+    const pdfDoc = pdfMake.createPdf(docDefinition);
+    pdfDoc.getBase64((data) => {
+      fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
+      resolve(filePath);
     });
-  }
-
-  doc.end();
-
-  return filePath;
+  });
 };
 
 export default generarPDF;
