@@ -22,7 +22,7 @@ const generarPDF = async (ticketDTO) => {
 
   // Configuración de estilos
   const headerFont = 'Helvetica-Bold';
-  const bodyFont = 'Helvetica';
+  const bodyFont = 'Helvetica'; // Usando Helvetica estándar de pdfkit
   const headerColor = '#336699';
   const bodyColor = '#000000';
 
@@ -72,27 +72,27 @@ const generarPDF = async (ticketDTO) => {
   doc.moveDown();
 
   // Crear la tabla de productos usando pdfkit-table
-  const tableRows = ticketDTO.cart.map(async item => {
+  const tableRows = [];
+
+  for (const item of ticketDTO.cart) {
+    let imageDataUri = '';
     try {
       const response = await axios.get(item.image, { responseType: 'arraybuffer' });
       const imageBuffer = Buffer.from(response.data, 'binary');
-      const imageDataUri = `data:image/jpeg;base64,${imageBuffer.toString('base64')}`;
-      return {
-        Producto: { image: imageDataUri, title: item.title },
-        Código: item.code,
-        Cantidad: item.quantity.toString(),
-        Precio: item.price.toString(),
-      };
+      imageDataUri = `data:image/jpeg;base64,${imageBuffer.toString('base64')}`;
     } catch (error) {
       console.error(`Error downloading image for product ${item.title}:`, error);
-      return {
-        Producto: 'Imagen no disponible',
-        Código: item.code,
-        Cantidad: item.quantity.toString(),
-        Precio: item.price.toString(),
-      };
     }
-  });
+
+    const rowData = {
+      Producto: { image: imageDataUri, title: item.title }, // Incluir la imagen y el título del producto
+      Código: item.code,
+      Cantidad: item.quantity.toString(),
+      Precio: item.price.toString(),
+    };
+
+    tableRows.push(rowData);
+  }
 
   // Configurar y dibujar la tabla usando pdfkit-table
   const table = new PDFKitTable(doc, {
@@ -106,8 +106,13 @@ const generarPDF = async (ticketDTO) => {
 
   await table.startNewPage();
 
-  for await (const item of tableRows) {
-    await table.addBodyRow(item);
+  for (const row of tableRows) {
+    await table.addBodyRow({
+      Producto: { image: row.Producto.image, width: 50, height: 50 }, // Ajusta el tamaño de la imagen según tus necesidades
+      Código: row.Código,
+      Cantidad: row.Cantidad,
+      Precio: row.Precio,
+    });
   }
 
   doc.end();
