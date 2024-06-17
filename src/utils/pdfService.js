@@ -3,7 +3,7 @@ import path from 'path';
 import axios from 'axios';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-
+//
 // Registrar las fuentes necesarias
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
