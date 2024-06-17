@@ -33,19 +33,20 @@ const generarPDF = (ticketDTO) => {
     // Definir el contenido del documento
     const docDefinition = {
       content: [
-        { text: 'Detalles del Ticket', style: 'header' },
-        { text: 'Código: ' + ticketDTO.code },
-        { text: 'Fecha: ' + ticketDTO.purchase_datetime },
-        { text: 'Nombre: ' + ticketDTO.name },
-        { text: 'Comprador: ' + ticketDTO.purchaser },
-        { text: 'Teléfono: ' + ticketDTO.phone },
-        { text: 'Mensaje: ' + ticketDTO.message },
-        { text: 'Departamento: ' + ticketDTO.departamento },
-        { text: 'Ciudad o Municipio: ' + ticketDTO.ciudad_o_municipio },
-        { text: 'Barrio: ' + ticketDTO.barrio },
-        { text: 'Dirección: ' + ticketDTO.direccion },
-        { text: 'Referencias de entrega: ' + ticketDTO.referencias_entrega },
-        { text: 'Monto: ' + ticketDTO.amount, style: 'bold' },
+        { text: 'Detalles del Ticket', style: 'header', margin: [0, 0, 0, 10] },
+        { text: 'Código: ' + ticketDTO.code, margin: [0, 0, 0, 5] },
+        { text: 'Fecha: ' + ticketDTO.purchase_datetime, margin: [0, 0, 0, 5] },
+        { text: 'Nombre: ' + ticketDTO.name, margin: [0, 0, 0, 5] },
+        { text: 'Documento: ' + ticketDTO.identification_document, margin: [0, 0, 0, 5] },
+        { text: 'Comprador: ' + ticketDTO.purchaser, margin: [0, 0, 0, 5] },
+        { text: 'Teléfono: ' + ticketDTO.phone, margin: [0, 0, 0, 5] },
+        { text: 'Mensaje: ' + ticketDTO.message, margin: [0, 0, 0, 5] },
+        { text: 'Departamento: ' + ticketDTO.departamento, margin: [0, 0, 0, 5] },
+        { text: 'Ciudad o Municipio: ' + ticketDTO.ciudad_o_municipio, margin: [0, 0, 0, 5] },
+        { text: 'Barrio: ' + ticketDTO.barrio, margin: [0, 0, 0, 5] },
+        { text: 'Dirección: ' + ticketDTO.direccion, margin: [0, 0, 0, 5] },
+        { text: 'Referencias de entrega: ' + ticketDTO.referencias_entrega, margin: [0, 0, 0, 5] },
+        { text: 'Monto: ' + ticketDTO.amount, style: 'bold', margin: [0, 10, 0, 10] },
         { text: 'Productos en el carrito', style: 'subheader' },
         {
           table: {
