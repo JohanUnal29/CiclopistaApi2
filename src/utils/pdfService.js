@@ -3,7 +3,7 @@ import path from 'path';
 import axios from 'axios';
 import pdfMake from 'pdfmake/build/pdfmake.js';
 import pdfFonts from 'pdfmake/build/vfs_fonts.js';
-//
+
 // Registrar las fuentes necesarias
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -25,7 +25,7 @@ const generarPDF = (ticketDTO) => {
         const response = await axios.get(url, { responseType: 'arraybuffer' });
         return Buffer.from(response.data, 'binary').toString('base64');
       } catch (error) {
-        console.error('Error downloading image:', error);
+        console.error('Error al descargar la imagen:', error);
         return null;
       }
     };
@@ -88,7 +88,14 @@ const generarPDF = (ticketDTO) => {
         item.quantity.toString(),
         item.price.toString()
       ];
-      docDefinition.content[13].table.body.push(row);
+      // Asegurarse de que la tabla y el cuerpo existan antes de agregar la fila
+      if (docDefinition.content[13] && docDefinition.content[13].table && docDefinition.content[13].table.body) {
+        docDefinition.content[13].table.body.push(row);
+      } else {
+        console.error('La tabla o el cuerpo de la tabla no están definidos');
+        reject(new Error('La tabla o el cuerpo de la tabla no están definidos'));
+        return;
+      }
     }
 
     // Generar el PDF
