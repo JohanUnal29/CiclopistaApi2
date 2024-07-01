@@ -199,9 +199,101 @@ class TicketController {
             const pdfPath = await generarPDF(ticketDTO);
             const result = await transport.sendMail({
               from: entorno.GOOGLE_MAIL,
-              to: `${ticketDTO.purchaser},johan.ardilah@gmail.com`, // Cambia esto a una dirección de correo válida para la prueba
-              subject: 'Orden',
-              html: '<p>This is a test email.</p>',
+              to: `${ticketDTO.purchaser},${entorno.GOOGLE_MAIL_SELLER}`, // Cambia esto a una dirección de correo válida para la prueba
+              subject: '¡Recibimos tu pedido!',
+              html: `
+                  <html>
+                    <head>
+                      <style>
+                        body {
+                          font-family: Arial, sans-serif;
+                          margin: 0;
+                          padding: 0;
+                          background-color: #f6f6f6;
+                        }
+                        .container {
+                          width: 100%;
+                          max-width: 600px;
+                          margin: 0 auto;
+                          background-color: #ffffff;
+                          padding: 20px;
+                          border-radius: 8px;
+                          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        }
+                        .header {
+                          text-align: center;
+                          padding-bottom: 20px;
+                        }
+                        .stage img {
+                          max-width: 100px;
+                        }
+                        .stage {
+                          text-align: center;
+                          padding-bottom: 20px;
+                        }
+                        .header img {
+                          max-width: 100px;
+                        }
+                        .content {
+                          padding: 20px 0;
+                        }
+                        .content p {
+                          margin: 10px 0;
+                        }
+                        .highlight {
+                          color: #e74c3c;
+                          font-weight: bold;
+                        }
+                        .footer {
+                          text-align: center;
+                          font-size: 12px;
+                          color: #777777;
+                          padding-top: 20px;
+                        }
+                        .social-icons {
+                          display: flex;
+                          justify-content: center;
+                          margin: 20px 0;
+                        }
+                        .social-icons a {
+                          margin: 0 10px;
+                          color: #000;
+                          text-decoration: none;
+                        }
+                        .contact {
+                          margin-top: 20px;
+                        }
+                      </style>
+                      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMW1W4hfM2ne8u3R6jt4XS5fPt6B0hFSkPaB4Qx" crossorigin="anonymous">
+                    </head>
+                    <body>
+                      <div class="container">
+                        <div class="header">
+                          <img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fcplogo%20rojo%20registrado%20R%20m%C3%A1s%20grande%20(1).png?alt=media&token=68739185-9438-4bf9-ac31-9b43b3fa9c87" alt="Ciclopista Logo">
+                        </div>
+                        <div class="content">
+                          <p><strong>¡Hola, ${ticketDTO.name}!</strong></p>
+                          <p>Ya recibimos la información de tu orden. Estamos a la espera de la aprobación del pago, te avisaremos tan pronto la recibamos.</p>
+                          <p class="highlight">Recuerda que tu pedido llegará de 3 a 9 días hábiles después de realizada la compra.</p>
+                        </div>
+                        <div class="stage">
+                          <img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fpedidorecibido.png?alt=media&token=3f74ad3e-ef30-4e94-a071-c7137355bbce" alt="Pedido recibido logo">
+                        </div>
+                        <div class="footer">
+                          <p><strong>SÍGUENOS EN REDES</strong></p>
+                          <div class="social-icons">
+                            <a href="https://instagram.com/ciclopista?igshid=MzRlODBiNWFlZA==" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/Ciclopista.repuestosyaccesorios?mibextid=ZbWKwL" target="_blank"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>            
+                          </div>
+                          <div class="contact">
+                            <p><a href="https://wa.link/zxwck6" style="color: inherit; text-decoration: none;"><i class="fab fa-whatsapp"></i> +57 350 604 0725</a></p>
+                          </div>
+                        </div>
+                      </div>
+                    </body>
+                  </html>
+                `,
               attachments: [
                 {
                   filename: `${ticketDTO.code}.pdf`,

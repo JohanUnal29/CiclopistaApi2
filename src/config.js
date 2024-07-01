@@ -25,6 +25,7 @@ entorno.SecretoSeguridad = process.env.SecretoSeguridad;
 
 entorno.GOOGLE_MAIL = process.env.GOOGLE_MAIL;
 entorno.GOOGLE_PASS = process.env.GOOGLE_PASS;
+entorno.GOOGLE_MAIL_SELLER = process.env.GOOGLE_MAIL_SELLER;
 
 /* export default {
   port: process.env.PORT,
