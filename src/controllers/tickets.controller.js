@@ -253,13 +253,7 @@ class TicketController {
                           color: #777777;
                           padding-top: 20px;
                         }
-                        .social-icons {
-                          display: flex;
-                          justify-content: center;
-                          text-align: center;
-                          margin: 20px 0;
-                          flex-wrap: wrap;
-                        }
+                        
                         .social-icons a {
                           margin: 10px;
                           color: #000;
