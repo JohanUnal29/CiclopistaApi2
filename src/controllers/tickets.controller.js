@@ -225,14 +225,14 @@ class TicketController {
                           padding-bottom: 20px;
                         }
                         .stage img {
-                          max-width: 100px;
+                          max-width: 400px;
                         }
                         .stage {
                           text-align: center;
                           padding-bottom: 20px;
                         }
                         .header img {
-                          max-width: 100px;
+                          max-width: 150px;
                         }
                         .content {
                           padding: 20px 0;
@@ -260,6 +260,10 @@ class TicketController {
                           color: #000;
                           text-decoration: none;
                         }
+                        .iconos{
+                          width: 30px;
+                          height: 30px;
+                        }
                         .contact {
                           margin-top: 20px;
                         }
@@ -282,12 +286,13 @@ class TicketController {
                         <div class="footer">
                           <p><strong>SÍGUENOS EN REDES</strong></p>
                           <div class="social-icons">
-                            <a href="https://instagram.com/ciclopista?igshid=MzRlODBiNWFlZA==" target="_blank"><i class="fab fa-instagram"></i></a>
-                            <a href="https://www.facebook.com/Ciclopista.repuestosyaccesorios?mibextid=ZbWKwL" target="_blank"><i class="fab fa-facebook"></i></a>
-                            <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>            
+                            <a href="https://instagram.com/ciclopista?igshid=MzRlODBiNWFlZA==" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Finstagram%20(1).png?alt=media&token=4126c5ee-7bfd-4b02-be1c-e4ef3b86eee8" class="iconos" alt="Instagram logo"></a>
+                            <a href="https://www.facebook.com/Ciclopista.repuestosyaccesorios?mibextid=ZbWKwL" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Ffacebook.png?alt=media&token=280b1d07-9e9d-4008-b5d2-f34d4063ac0e" class="iconos" alt="Facebook logo"></a>
+                            <a href="https://www.tiktok.com" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Ftik-tok.png?alt=media&token=2bc42a56-917f-437d-a445-7873d524e06c" class="iconos" alt="Tik Tok logo"></a>            
                           </div>
                           <div class="contact">
-                            <p><a href="https://wa.link/zxwck6" style="color: inherit; text-decoration: none;"><i class="fab fa-whatsapp"></i> +57 350 604 0725</a></p>
+                            <a href="https://wa.link/zxwck6" style="color: inherit; text-decoration: none;"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fwhatsapp.png?alt=media&token=c695aedc-da92-4572-a285-d662330e6493" class="iconos" alt="WhatsApp logo"></a>
+                            <p>+57 350 604 0725</p>
                           </div>
                         </div>
                       </div>
