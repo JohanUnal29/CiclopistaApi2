@@ -225,14 +225,16 @@ class TicketController {
                           padding-bottom: 20px;
                         }
                         .stage img {
-                          max-width: 400px;
+                          max-width: 65%;
+                          height: auto;
                         }
                         .stage {
                           text-align: center;
                           padding-bottom: 20px;
                         }
                         .header img {
-                          max-width: 150px;
+                          max-width: 30%;
+                          height: auto;
                         }
                         .content {
                           padding: 20px 0;
@@ -243,29 +245,71 @@ class TicketController {
                         .highlight {
                           color: #e74c3c;
                           font-weight: bold;
+                          font-size: 18px
                         }
                         .footer {
                           text-align: center;
-                          font-size: 12px;
+                          font-size: 18px;
                           color: #777777;
                           padding-top: 20px;
                         }
                         .social-icons {
                           display: flex;
                           justify-content: center;
+                          text-align: center;
                           margin: 20px 0;
+                          flex-wrap: wrap;
                         }
                         .social-icons a {
-                          margin: 0 10px;
+                          margin: 10px;
                           color: #000;
                           text-decoration: none;
                         }
-                        .iconos{
+                        .iconos {
                           width: 30px;
                           height: 30px;
                         }
                         .contact {
                           margin-top: 20px;
+                        }.saludo {
+                          font-size: 18px;
+                        }.medio{
+                          font-size: 15px;
+                        }
+
+                        @media (max-width: 600px) {
+                          .container {
+                            padding: 10px;
+                            width: 500px;
+                          }
+                          .content, .footer {
+                            padding: 10px 0;
+                          }
+                          .social-icons a {
+                            margin: 5px;
+                          }
+                        }
+
+                        @media (max-width: 400px) {
+                          .container {
+                            padding: 10px;
+                            width: 400px;
+                          }
+                          .highlight {
+                            font-size: 14px;
+                          }
+                          .footer {
+                            font-size: 16px;
+                          }
+                          .contact {
+                          margin-top: 18px;
+                          }
+                          .saludo {
+                          font-size: 16px;
+                          }
+                          .medio{
+                          font-size: 13px;
+                          }
                         }
                       </style>
                       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMW1W4hfM2ne8u3R6jt4XS5fPt6B0hFSkPaB4Qx" crossorigin="anonymous">
@@ -276,8 +320,8 @@ class TicketController {
                           <img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fcplogo%20rojo%20registrado%20R%20m%C3%A1s%20grande%20(1).png?alt=media&token=68739185-9438-4bf9-ac31-9b43b3fa9c87" alt="Ciclopista Logo">
                         </div>
                         <div class="content">
-                          <p><strong>¡Hola, ${ticketDTO.name}!</strong></p>
-                          <p>Ya recibimos la información de tu orden. Estamos a la espera de la aprobación del pago, te avisaremos tan pronto la recibamos.</p>
+                          <p class="saludo"><strong>¡Hola, ${ticketDTO.name}!</strong></p>
+                          <p class="medio">Ya recibimos la información de tu orden. Estamos a la espera de la aprobación del pago, te avisaremos tan pronto la recibamos.</p>
                           <p class="highlight">Recuerda que tu pedido llegará de 3 a 9 días hábiles después de realizada la compra.</p>
                         </div>
                         <div class="stage">
@@ -298,6 +342,7 @@ class TicketController {
                       </div>
                     </body>
                   </html>
+
                 `,
               attachments: [
                 {
