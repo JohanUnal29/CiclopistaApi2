@@ -20,6 +20,7 @@ export default class TicketDTO {
         this.barrio = ticket.barrio;
         this.direccion = ticket.direccion;
         this.referencias_entrega = ticket.referencias_entrega;
+        this.statusPay = ticket.statusPay;
         this.cart = cart.map(item => ({
             _id: item._id,
             title: item.title,
