@@ -7,7 +7,7 @@ import CustomError from "../DAO/mongo/services/errors/custom-error.js";
 import EErros from "../DAO/mongo/services/errors/enum.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
-import enviarCorreo from "../utils/emailService.js";
+
 
 // import mercadopago from "mercadopago";
 
