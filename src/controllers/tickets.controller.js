@@ -318,7 +318,7 @@ class TicketController {
                         <div class="content">
                           <p class="saludo"><strong>¡Hola, ${ticketDTO.name}!</strong></p>
                           <p class="medio">Ya recibimos la información de tu orden. Estamos a la espera de la aprobación del pago, te avisaremos tan pronto la recibamos.</p>
-                          <p class="medio">Si seleccionaste metódo contra entrega debes esperar que un asesor se comunique contigo</p>
+                          <p class="medio">Si seleccionaste metódo contra entrega debes esperar que un asesor se comunique contigo.</p>
                           <br />
                           <p class="highlight">Recuerda que tu pedido llegará de 1 a 9 días hábiles después de realizada la compra.</p>
                         </div>
