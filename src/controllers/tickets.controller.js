@@ -289,7 +289,7 @@ class TicketController {
                         @media (max-width: 400px) {
                           .container {
                             padding: 10px;
-                            width: 400px;
+                            width: 300px;
                           }
                           .highlight {
                             font-size: 14px;
@@ -494,6 +494,223 @@ class TicketController {
       });
     }
   }
+
+  async purchaseEmail(req, res) {
+    try {
+      const receiptDetail = req.body;
+      
+      const result = await transport.sendMail({
+        from: entorno.GOOGLE_MAIL,
+        to: `${receiptDetail.emailBuyer},${entorno.GOOGLE_MAIL_SELLER}`, // Cambia esto a una dirección de correo válida para la prueba
+        subject: '¡GRACIAS POR TU COMPRA!',
+        html: `
+            <html>
+              <head>
+                <style>
+                  body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f6f6f6;
+                  }
+                  .container {
+                    width: 100%;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background-color: #ffffff;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  }
+                  .header {
+                    text-align: center;
+                    padding-bottom: 20px;
+                  }
+                  .stage img {
+                    max-width: 65%;
+                    height: auto;
+                  }
+                  .stage {
+                    text-align: center;
+                    padding-bottom: 20px;
+                  }
+                  .header img {
+                    max-width: 30%;
+                    height: auto;
+                  }
+                  .content {
+                    padding: 20px 0;
+                  }
+                  .content p {
+                    margin: 10px 0;
+                  }
+                  .highlight {
+                    color: #e74c3c;
+                    font-weight: bold;
+                    font-size: 18px;
+                    text-align: center;
+                  }
+                  .footer {
+                    text-align: center;
+                    font-size: 18px;
+                    color: #777777;
+                    padding-top: 20px;
+                  }
+                  
+                  .social-icons a {
+                    margin: 10px;
+                    color: #000;
+                    text-decoration: none;
+                  }
+                  .iconos {
+                    width: 30px;
+                    height: 30px;
+                  }
+                  .contact {
+                    margin-top: 20px;
+                  }.saludo {
+                    font-size: 18px;
+                  }.medio{
+                    font-size: 15px;
+                    text-align: justify;
+                  }
+
+                  .forma-de-pago {
+                    border: 1px dashed #000;
+                    padding: 4px;
+                    width: 100%;
+                    margin: 0 auto; /* Centra el cuadro */
+                    border-radius: 8px; /* Añade esquinas redondeadas */
+                  }
+
+                  .forma-de-pago h3 {
+                    margin: 0;
+                    font-size: 18px;
+                    text-align: center; /* Centra el título */
+                    padding-bottom: 5px; /* Espacio debajo del título */
+                    border-bottom: 1px dotted #999; /* Línea punteada debajo del título */
+                  }
+
+                  .forma-de-pago p {
+                    margin: 6px 0;
+                    font-size: 15px;
+                  }
+
+                  @media (max-width: 600px) {
+                    .container {
+                      padding: 10px;
+                      width: 500px;
+                    }
+                    .content, .footer {
+                      padding: 10px 0;
+                    }
+                    .social-icons a {
+                      margin: 5px;
+                    }
+                  }
+
+                  @media (max-width: 400px) {
+                    .container {
+                      padding: 10px;
+                      width: 300px;
+                    }
+                    .highlight {
+                      font-size: 14px;
+                    }
+                    .footer {
+                      font-size: 16px;
+                    }
+                    .contact {
+                    margin-top: 18px;
+                    }
+                    .saludo {
+                    font-size: 16px;
+                    }
+                    .medio{
+                      font-size: 13px;
+                    }
+                    .forma-de-pago h3 {
+                      font-size: 18px;
+                    }
+                    .forma-de-pago p {
+                      margin: 6px 0;
+                      font-size: 13px;
+                    }
+
+                    
+                  }
+                </style>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMW1W4hfM2ne8u3R6jt4XS5fPt6B0hFSkPaB4Qx" crossorigin="anonymous">
+              </head>
+              <body>
+                <div class="container">
+                  <div class="header">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fcplogo%20rojo%20registrado%20R%20m%C3%A1s%20grande%20(1).png?alt=media&token=68739185-9438-4bf9-ac31-9b43b3fa9c87" alt="Ciclopista Logo">
+                  </div>
+                  <div class="content">
+                    <p class="saludo"><strong>¡Hola, ${receiptDetail.nameOrder}!</strong></p>
+                    <p class="medio">El pago de tu orden ha sido aprobado. Pronto recibirás tu pedido en la puerta de tu casa.</p>
+                    <br />
+                    <p class="highlight">Recuerda que tu pedido llegará de 1 a 9 días hábiles después de realizada la compra.</p>
+                  </div>
+                  <div class="stage">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fpagorecibido.png?alt=media&token=ea0e5111-2c36-4f8d-bd8d-d5c79656cabc" alt="Pedido recibido logo">
+                  </div>
+                  <div class="forma-de-pago">
+                    <h3>FORMA DE PAGO</h3>
+                    <p>Referencia de pago: ${receiptDetail.transaction}</p>
+                    <p>Referencia de pedido: ${receiptDetail.reference}</p>
+                    <p>Email del comprador: ${receiptDetail.emailBuyer}</p>
+                    <p>Email del pagador: ${receiptDetail.emailPay}</p>
+                    <p>${receiptDetail.metodPay}</p>
+                    <p>$${receiptDetail.amount}</p>
+                  </div>
+                  <div class="footer">
+                    <p><strong>SÍGUENOS EN REDES</strong></p>
+                    <div class="social-icons">
+                      <a href="https://instagram.com/ciclopista?igshid=MzRlODBiNWFlZA==" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Finstagram%20(1).png?alt=media&token=4126c5ee-7bfd-4b02-be1c-e4ef3b86eee8" class="iconos" alt="Instagram logo"></a>
+                      <a href="https://www.facebook.com/Ciclopista.repuestosyaccesorios?mibextid=ZbWKwL" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Ffacebook.png?alt=media&token=280b1d07-9e9d-4008-b5d2-f34d4063ac0e" class="iconos" alt="Facebook logo"></a>
+                      <a href="https://www.tiktok.com" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Ftik-tok.png?alt=media&token=2bc42a56-917f-437d-a445-7873d524e06c" class="iconos" alt="Tik Tok logo"></a>            
+                    </div>
+                    <div class="contact">
+                      <a href="https://wa.link/zxwck6" style="color: inherit; text-decoration: none;"><img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fwhatsapp.png?alt=media&token=c695aedc-da92-4572-a285-d662330e6493" class="iconos" alt="WhatsApp logo"></a>
+                      <p>+57 350 604 0725</p>
+                    </div>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `,
+        attachments: [
+          {
+            filename: `${ticketDTO.code}.pdf`,
+            path: pdfPath,
+          }
+        ],
+      });
+
+      return res.send({
+        status: "success",
+        message: "correo enviado",
+        payload: userWithOrders,
+      });
+    } catch (error) {
+      CustomError.createError({
+        name: "Error-send-email",
+        cause: error,
+        message: "An error occurred while sending the Email",
+        code: EErros.DATABASES_READ_ERROR,
+      });
+
+      req.logger.error({
+        message: "An error occurred while sending the Email",
+        cause: error,
+        Date: new Date().toLocaleTimeString(),
+        stack: JSON.stringify(error.stack, null, 2),
+      });
+    }
+  }
+  
 }
 
 export const ticketController = new TicketController();

@@ -28,4 +28,6 @@ router.put("/:code/:uid", checkAdmin, ticketController.updateTicket);
 
 router.delete("/:pid/:uid", checkAdmin, ticketController.deleteTicket);
 
+router.post("/purchaseemail",  ticketController.purchaseEmail);
+
 export default router;
