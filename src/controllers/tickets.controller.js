@@ -245,7 +245,8 @@ class TicketController {
                         .highlight {
                           color: #e74c3c;
                           font-weight: bold;
-                          font-size: 18px
+                          font-size: 18px;
+                          text-align: center;
                         }
                         .footer {
                           text-align: center;
@@ -269,6 +270,7 @@ class TicketController {
                           font-size: 18px;
                         }.medio{
                           font-size: 15px;
+                          text-align: justify;
                         }
 
                         @media (max-width: 600px) {
@@ -316,7 +318,9 @@ class TicketController {
                         <div class="content">
                           <p class="saludo"><strong>¡Hola, ${ticketDTO.name}!</strong></p>
                           <p class="medio">Ya recibimos la información de tu orden. Estamos a la espera de la aprobación del pago, te avisaremos tan pronto la recibamos.</p>
-                          <p class="highlight">Recuerda que tu pedido llegará de 3 a 9 días hábiles después de realizada la compra.</p>
+                          <p class="medio">Si seleccionaste metódo contra entrega debes esperar que un asesor se comunique contigo</p>
+                          <br />
+                          <p class="highlight">Recuerda que tu pedido llegará de 1 a 9 días hábiles después de realizada la compra.</p>
                         </div>
                         <div class="stage">
                           <img src="https://firebasestorage.googleapis.com/v0/b/ciclopista.appspot.com/o/decorative%2Fpedidorecibido.png?alt=media&token=3f74ad3e-ef30-4e94-a071-c7137355bbce" alt="Pedido recibido logo">
@@ -336,7 +340,6 @@ class TicketController {
                       </div>
                     </body>
                   </html>
-
                 `,
               attachments: [
                 {
