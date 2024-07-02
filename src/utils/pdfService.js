@@ -46,7 +46,7 @@ const generarPDF = (ticketDTO) => {
         { text: [{ text: 'Barrio: ', style: 'bold' }, ticketDTO.barrio], margin: [0, 0, 0, 5] },
         { text: [{ text: 'Dirección: ', style: 'bold' }, ticketDTO.direccion], margin: [0, 0, 0, 5] },
         { text: [{ text: 'Referencias de entrega: ', style: 'bold' }, ticketDTO.referencias_entrega], margin: [0, 0, 0, 5] },
-        { text: [{ text: 'Monto Total: ', color: 'red', style: 'bold' }, { text: ticketDTO.amount, color: 'red' }], margin: [0, 10, 0, 10] },
+        { text: [{ text: 'Monto Total: $', color: 'red', style: 'bold' }, { text: ticketDTO.amount, color: 'red' }], margin: [0, 10, 0, 10] },
         { text: 'Productos en el carrito', style: 'subheader' },
         {
           table: {
